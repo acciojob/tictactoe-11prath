@@ -6,12 +6,30 @@
   <title>Tic Tac Toe</title>
   <style>
     body {
-      font-family: Arial, sans-serif;
+      font-family: "Comic Sans MS", cursive, sans-serif;
       text-align: center;
-      background: #f8f9fa;
+      background: #fff0f5;
     }
     .container {
       margin-top: 40px;
+    }
+    h1 {
+      font-size: 3rem;
+      font-weight: bold;
+      margin-bottom: 20px;
+      color: black;
+      letter-spacing: 2px;
+    }
+    input {
+      margin: 5px;
+      padding: 10px;
+      font-size: 1rem;
+    }
+    button {
+      padding: 10px 20px;
+      margin-top: 10px;
+      font-size: 1rem;
+      cursor: pointer;
     }
     .board {
       display: grid;
@@ -26,33 +44,31 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 2rem;
+      font-size: 2.5rem;
+      font-weight: bold;
       cursor: pointer;
     }
     .cell.taken {
       pointer-events: none;
     }
+    .cell.win {
+      background: purple;
+      color: white;
+    }
     .message {
       margin-top: 20px;
-      font-size: 1.2rem;
+      font-size: 1.3rem;
       font-weight: bold;
-    }
-    input {
-      margin: 5px;
-      padding: 8px;
-    }
-    button {
-      padding: 8px 15px;
-      margin-top: 10px;
+      color: #333;
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <!-- Player Input Section -->
-    <h1>Tic Tac Toe</h1>
-    <input type="text" id="player-1" placeholder="Player 1 name" />
-    <input type="text" id="player-2" placeholder="Player 2 name" />
+    <!-- Initial Input View -->
+    <h1>TIC TAC TOE</h1>
+    <input type="text" id="player-1" placeholder="enter name" />
+    <input type="text" id="player-2" placeholder="enter name" />
     <button id="submit">Start Game</button>
 
     <!-- Message -->
@@ -111,8 +127,10 @@
         cell.textContent = currentSymbol;
         cell.classList.add("taken");
 
-        if(checkWin(currentSymbol)) {
+        const winCombo = checkWin(currentSymbol);
+        if(winCombo) {
           messageDiv.textContent = `${currentPlayer}, congratulations you won!`;
+          highlightWin(winCombo);
           endGame();
           return;
         }
@@ -131,10 +149,17 @@
     });
 
     function checkWin(symbol) {
-      return winningCombos.some(combo => {
-        return combo.every(id => {
-          return document.getElementById(id).textContent === symbol;
-        });
+      for (let combo of winningCombos) {
+        if (combo.every(id => document.getElementById(id).textContent === symbol)) {
+          return combo; // return winning combo
+        }
+      }
+      return null;
+    }
+
+    function highlightWin(combo) {
+      combo.forEach(id => {
+        document.getElementById(id).classList.add("win");
       });
     }
 
